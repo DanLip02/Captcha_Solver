@@ -1,0 +1,11 @@
+numpy
+pandas
+pyxlsb
+sqlalchemy
+xmltodict
+python-dotenv
+requests
+keras
+opencv-python
+tensorflow
+pillow
