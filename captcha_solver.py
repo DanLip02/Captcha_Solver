@@ -113,7 +113,7 @@ class Captchasolver:
 if __name__ == '__main__':
     train_path = 'train'
     test_path = 'test'
-    flag = True
+    flag = False
     solver = Captchasolver(train_path)
     path = solver.path
     all_captchas = solver.num_captcha
