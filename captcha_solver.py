@@ -43,7 +43,7 @@ class Captchasolver:
         character = string.ascii_uppercase + string.digits
         nchar = len(character)
         img = layers.Input(shape=imgshape)  # Get image as an input of size 50,200,1
-        conv1 = layers.Conv2D(16, (3, 3), padding='same', activation='relu')(img)
+        conv1 = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(img)
         bn1 = layers.BatchNormalization()(conv1)
         mp1 = layers.MaxPooling2D(pool_size=(2, 2), padding='same')(bn1)
         conv2 = layers.Conv2D(32, (3, 3), padding='same', activation='relu')(mp1)
@@ -84,7 +84,7 @@ class Captchasolver:
         early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
         reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=15, min_lr=1e-5)
         hist = model.fit(x_train, [y_train[0], y_train[1], y_train[2], y_train[3], y_train[4]], epochs=65,
-                         batch_size=15,
+                         batch_size=60,
                          validation_split=0.2, shuffle=True, callbacks=[reduce_lr, early_stopping])
 
         preds = model.evaluate(x_train, [y_train[0], y_train[1], y_train[2], y_train[3], y_train[4]])
@@ -111,8 +111,9 @@ class Captchasolver:
         return capt
 
 if __name__ == '__main__':
-    train_path = ''
-    test_path = ''
+    train_path = 'train'
+    test_path = 'test'
+    flag = True
     solver = Captchasolver(train_path)
     path = solver.path
     all_captchas = solver.num_captcha
@@ -121,6 +122,8 @@ if __name__ == '__main__':
     X, y = solver.preprocess(path=path, all_captchas=all_captchas)
     X_train, y_train = X[:9000], y[:, :9000]
     X_test, y_test = X[9000:], y[:, 9000:]
+    if flag:
+        hist_train, preds_train = solver.fit_model(model, X_train, y_train)
     counter = 0
     for i, pic in enumerate(os.listdir(test_path)):
         pic_target_val_ = pic[:-4]
